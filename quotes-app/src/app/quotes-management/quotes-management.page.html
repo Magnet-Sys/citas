@@ -8,21 +8,58 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div class="form-container">
-    <ion-label class="title">Crear una cita</ion-label>
-    <ion-item>
-      <ion-label position="floating">Cita</ion-label>
-      <ion-textarea [(ngModel)]="newQuoteText"></ion-textarea>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Autor</ion-label>
-      <ion-input [(ngModel)]="newQuoteAuthor"></ion-input>
-    </ion-item>
-    <ion-button expand="block" (click)="addQuote()" class="add-quote-button"
-      >AGREGAR +</ion-button
-    >
-  </div>
-
+  <form [formGroup]="quoteForm" (ngSubmit)="addQuote()">
+    <div class="form-container">
+      <ion-label class="title">Crear una cita</ion-label>
+      <ion-item>
+        <ion-label position="floating">Cita</ion-label>
+        <ion-textarea formControlName="quote"></ion-textarea>
+      </ion-item>
+      <div
+        *ngIf="quoteForm.get('quote')?.invalid && quoteForm.get('quote')?.touched"
+      >
+        <span
+          class="error-message"
+          *ngIf="quoteForm.get('quote')?.errors?.['required']"
+        >
+          La cita es obligatoria.
+        </span>
+        <span
+          class="error-message"
+          *ngIf="quoteForm.get('quote')?.errors?.['minlength']"
+        >
+          La cita debe tener al menos 5 caracteres.
+        </span>
+      </div>
+      <ion-item>
+        <ion-label position="floating">Autor</ion-label>
+        <ion-input formControlName="author"></ion-input>
+      </ion-item>
+      <div
+        *ngIf="quoteForm.get('author')?.invalid && quoteForm.get('author')?.touched"
+      >
+        <span
+          class="error-message"
+          *ngIf="quoteForm.get('author')?.errors?.['required']"
+        >
+          El autor es obligatorio.
+        </span>
+        <span
+          class="error-message"
+          *ngIf="quoteForm.get('author')?.errors?.['minlength']"
+        >
+          El autor debe tener al menos 2 caracteres.
+        </span>
+      </div>
+      <ion-button
+        expand="block"
+        type="submit"
+        class="add-quote-button"
+        [disabled]="!quoteForm.valid"
+        >AGREGAR +</ion-button
+      >
+    </div>
+  </form>
   <ion-list>
     <ion-item
       *ngFor="let item of quotes; let i = index"

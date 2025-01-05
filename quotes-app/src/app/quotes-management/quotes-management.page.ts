@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { QuoteService } from '../services/quote.service';
 import { AlertController } from '@ionic/angular';
@@ -12,7 +18,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './quotes-management.page.html',
   styleUrls: ['./quotes-management.page.scss'],
   standalone: true,
-  imports: [IonicModule, FormsModule, CommonModule],
+  imports: [IonicModule, FormsModule, CommonModule, ReactiveFormsModule],
 })
 export class QuotesManagementPage implements OnInit {
   quotes!: { quote: string; author: string }[]; // Use '!' para inicializar más tarde
@@ -20,12 +26,25 @@ export class QuotesManagementPage implements OnInit {
   newQuoteAuthor!: string;
   allowDeleteOnHome!: boolean;
   private allowDeleteSubscription!: Subscription;
+  quoteForm: FormGroup; // Defino el FormGroup
 
   constructor(
     private quoteService: QuoteService,
     private alertController: AlertController,
     private settingsService: SettingsService
-  ) {}
+  ) {
+    // Inicializo el FormGroup con los FormControl y sus validadores
+    this.quoteForm = new FormGroup({
+      quote: new FormControl('', [
+        Validators.required,
+        Validators.minLength(5),
+      ]),
+      author: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+      ]),
+    });
+  }
 
   ngOnInit() {
     this.quotes = this.quoteService.getQuotes();
@@ -40,15 +59,18 @@ export class QuotesManagementPage implements OnInit {
   }
 
   ngOnDestroy() {
-    // Utilizo metodo para desuscribirme y evitar fugas de memoria
+    // Utilizo método para desuscribirme y evitar fugas de memoria
     this.allowDeleteSubscription.unsubscribe();
   }
 
   addQuote() {
-    if (this.newQuoteText && this.newQuoteAuthor) {
-      this.quoteService.addQuote(this.newQuoteText, this.newQuoteAuthor);
-      this.newQuoteText = '';
-      this.newQuoteAuthor = '';
+    if (this.quoteForm.valid) {
+      // Si el formulario es válido, obtengo los valores de los campos
+      this.quoteService.addQuote(
+        this.quoteForm.value.quote,
+        this.quoteForm.value.author
+      );
+      this.quoteForm.reset(); // Reseteo el formulario
       this.quotes = this.quoteService.getQuotes(); // Actualizo lista
     } else {
       this.presentAlert();

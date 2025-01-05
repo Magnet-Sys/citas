@@ -20,3 +20,11 @@
   color: #666;
   text-align: left;
 }
+// Se agregan estilos para el mensaje de error por validación de formulario
+.error-message {
+  color: red;
+  font-size: 0.8em;
+  margin-top: 2px;
+  margin-bottom: 5px;
+  display: block;
+}
