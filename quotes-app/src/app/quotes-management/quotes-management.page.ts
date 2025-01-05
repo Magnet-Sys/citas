@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -12,6 +12,7 @@ import { QuoteService } from '../services/quote.service';
 import { AlertController } from '@ionic/angular';
 import { SettingsService } from '../services/settings.service';
 import { Subscription } from 'rxjs';
+import { Quote } from '../models/quote.model';
 
 @Component({
   selector: 'app-quotes-management',
@@ -20,10 +21,8 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [IonicModule, FormsModule, CommonModule, ReactiveFormsModule],
 })
-export class QuotesManagementPage implements OnInit {
-  quotes!: { quote: string; author: string }[]; // Use '!' para inicializar más tarde
-  newQuoteText!: string;
-  newQuoteAuthor!: string;
+export class QuotesManagementPage implements OnInit, OnDestroy {
+  quotes!: Quote[]; // Use '!' para inicializar más tarde
   allowDeleteOnHome!: boolean;
   private allowDeleteSubscription!: Subscription;
   quoteForm: FormGroup; // Defino el FormGroup

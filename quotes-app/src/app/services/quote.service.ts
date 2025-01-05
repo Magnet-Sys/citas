@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Quote } from '../models/quote.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QuoteService {
-  private quotes: { quote: string; author: string }[] = [
+  private quotes: Quote[] = [
     // South Park Quotes (My Favorite Show)
     {
       quote: 'Dios mío, ¡es asqueroso!',
