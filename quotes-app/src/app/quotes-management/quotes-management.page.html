@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-left">Gestión de citas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="form-container">
+    <ion-label class="title">Crear una cita</ion-label>
+    <ion-item>
+      <ion-label position="floating">Cita</ion-label>
+      <ion-textarea [(ngModel)]="newQuoteText"></ion-textarea>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Autor</ion-label>
+      <ion-input [(ngModel)]="newQuoteAuthor"></ion-input>
+    </ion-item>
+    <ion-button expand="block" (click)="addQuote()" class="add-quote-button"
+      >AGREGAR +</ion-button
+    >
+  </div>
+
+  <ion-list>
+    <ion-item
+      *ngFor="let item of quotes; let i = index"
+      lines="full"
+      class="quote-item"
+    >
+      <ion-label class="ion-text-wrap">
+        <p class="quote-text">"{{ item.quote }}"</p>
+        <p class="quote-author">- {{ item.author }}</p>
+      </ion-label>
+      <ion-button
+        *ngIf="allowDeleteOnHome"
+        fill="clear"
+        color="danger"
+        (click)="deleteQuote(i)"
+        slot="end"
+      >
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

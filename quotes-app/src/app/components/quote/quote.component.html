@@ -1,0 +1,8 @@
+<ion-card>
+  <ion-card-content *ngIf="quote">
+    <p>"{{ quote.quote }}"</p>
+    <ion-footer>
+      <ion-label *ngIf="showAuthor"> - {{ quote.author }}</ion-label>
+    </ion-footer>
+  </ion-card-content>
+</ion-card>
