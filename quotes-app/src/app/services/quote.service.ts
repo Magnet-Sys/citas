@@ -102,10 +102,31 @@ export class QuoteService {
 
   // South Park Quotes (My Favorite Show) :D
   async getRandomQuote(): Promise<Quote | null> {
+    // Agregué validación para la base de datos (debe estar abierta antes de ejecutar la consulta)
+    if (!this.db) {
+      console.error('Base de datos no está abierta');
+      return null;
+    }
+
     const sql = `SELECT * FROM ${this.TABLE_NAME} ORDER BY RANDOM() LIMIT 1;`;
     try {
       const resultado = await this.db.query(sql);
-      return resultado?.values?.[0] ?? null;
+
+      // Verifico que el resultado tenga valores antes de intentar acceder
+      if (resultado?.values && resultado.values.length > 0) {
+        const randomQuote = resultado.values[0]; // Selecciono la primera cita aleatoria.
+        console.log(
+          'Cita aleatoria obtenida del servicio getRandomQuote():',
+          randomQuote
+        );
+        return {
+          quote: randomQuote[this.COL_QUOTE],
+          author: randomQuote[this.COL_AUTHOR],
+        };
+      } else {
+        console.log('No se encontraron citas aleatorias.');
+        return null;
+      }
     } catch (error) {
       console.error('Error al obtener una cita aleatoria:', error);
       return null;
