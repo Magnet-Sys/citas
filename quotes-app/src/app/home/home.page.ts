@@ -17,6 +17,9 @@ export class HomePage implements OnInit {
   currentQuote!: Quote;
 
   constructor(private quoteService: QuoteService, private router: Router) {
+    // Esto lo agregué para que se inicie el plugin al cargar la página y desapareciera el error:
+    // "Error al obtener una cita aleatoria: TypeError: Cannot read properties of undefined (reading 'query')"
+    // Pero no resultó, así que lo comenté.
     // this.quoteService.iniciarPlugin().then(() => {
     //   this.quoteService.getRandomQuote(); // Espera la cita aleatoria
     // });

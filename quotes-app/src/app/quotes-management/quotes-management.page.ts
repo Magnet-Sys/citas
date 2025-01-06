@@ -46,6 +46,7 @@ export class QuotesManagementPage implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    console.log('Iniciando...', this.quotes);
     await this.quoteService.iniciarPlugin();
     await this.updateQuote();
 
