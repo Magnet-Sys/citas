@@ -24,20 +24,18 @@ export class HomePage implements OnInit {
     //   this.quoteService.getRandomQuote(); // Espera la cita aleatoria
     // });
   }
+
   async ngOnInit() {
     try {
-      // Espero la cita aleatoria al iniciar la página
+      // Verificar que la base de datos esté lista antes de obtener la cita aleatoria
+      await this.quoteService.iniciarPlugin();
       const randomQuote = await this.quoteService.getRandomQuote();
 
-      // Verifico si la cita es válida
-      if (randomQuote && randomQuote.quote && randomQuote.author) {
-        this.currentQuote = {
-          quote: randomQuote.quote,
-          author: randomQuote.author,
-        };
+      if (randomQuote) {
+        this.currentQuote = randomQuote;
       } else {
         this.currentQuote = {
-          quote: 'No se encontró ninguna cita.',
+          quote: 'No se encontró una cita aleatoria.',
           author: 'Desconocido',
         };
       }

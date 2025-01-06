@@ -11,42 +11,6 @@ import { Capacitor } from '@capacitor/core';
   providedIn: 'root',
 })
 export class QuoteService {
-  // private quotes: Quote[] = [
-  //   // South Park Quotes (My Favorite Show)
-  //   {
-  //     quote: 'Dios mío, ¡es asqueroso!',
-  //     author: 'Stan Marsh',
-  //   },
-  //   {
-  //     quote: 'No estoy gordo, estoy festivamente regordete.',
-  //     author: 'Eric Cartman',
-  //   },
-  //   {
-  //     quote: '¡Hay una serpiente en mi bota!',
-  //     author: 'Mr. Garrison',
-  //   },
-  //   {
-  //     quote: 'Los niños tienen razón.',
-  //     author: 'Chef',
-  //   },
-  //   {
-  //     quote: 'Lu lu lu, estoy en problemas.',
-  //     author: 'Butters Stotch',
-  //   },
-  //   {
-  //     quote: '¡Oh, mi Dios! ¡Mataron a Kenny!',
-  //     author: 'Stan Marsh y Kyle Broflovski',
-  //   },
-  //   {
-  //     quote: '¡Hola, chicos!',
-  //     author: 'Mr. Hankey',
-  //   },
-  //   {
-  //     quote: '¡Oh, Mie#$a!',
-  //     author: 'Randy Marsh',
-  //   },
-  // ];
-
   sqlite: SQLiteConnection = new SQLiteConnection(CapacitorSQLite);
   db!: SQLiteDBConnection;
   plataforma: string = '';
@@ -136,6 +100,7 @@ export class QuoteService {
     }
   }
 
+  // South Park Quotes (My Favorite Show) :D
   async getRandomQuote(): Promise<Quote | null> {
     const sql = `SELECT * FROM ${this.TABLE_NAME} ORDER BY RANDOM() LIMIT 1;`;
     try {
@@ -149,7 +114,6 @@ export class QuoteService {
 
   async addQuote(cita: Quote): Promise<void> {
     const sql = `INSERT INTO ${this.TABLE_NAME}(${this.COL_QUOTE}, ${this.COL_AUTHOR}) VALUES(?, ?)`;
-    // await this.db.run(sql, [cita.quote, cita.author]);
     try {
       await this.db.run(sql, [cita.quote, cita.author]);
       console.log('Cita agregada correctamente:', [cita.quote, cita.author]);
