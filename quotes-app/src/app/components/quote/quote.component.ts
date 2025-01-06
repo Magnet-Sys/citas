@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { Quote } from 'src/app/models/quote.model';
 
 @Component({
   selector: 'app-quote',
@@ -10,7 +11,7 @@ import { IonicModule } from '@ionic/angular';
   imports: [IonicModule, CommonModule],
 })
 export class QuoteComponent implements OnInit {
-  @Input() quote?: { quote: string; author: string };
+  @Input() quote?: Quote;
   @Input() showAuthor: boolean = true;
 
   constructor() {}

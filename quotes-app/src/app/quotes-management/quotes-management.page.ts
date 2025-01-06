@@ -32,7 +32,7 @@ export class QuotesManagementPage implements OnInit, OnDestroy {
     private alertController: AlertController,
     private settingsService: SettingsService
   ) {
-    // Inicializo el FormGroup con los FormControl y sus validadores
+    // Inicializo el FormGroup con los FormControl y sus validaciones
     this.quoteForm = new FormGroup({
       quote: new FormControl('', [
         Validators.required,
@@ -45,8 +45,9 @@ export class QuotesManagementPage implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    this.quotes = this.quoteService.getQuotes();
+  async ngOnInit() {
+    await this.quoteService.iniciarPlugin();
+    await this.updateQuote();
 
     // Obtengo el valor inicial de allowDeleteOnHome
     this.allowDeleteOnHome = this.settingsService.getAllowDeleteOnHome();
@@ -57,39 +58,47 @@ export class QuotesManagementPage implements OnInit, OnDestroy {
       });
   }
 
+  async updateQuote() {
+    this.quotes = await this.quoteService.getQuotes();
+  }
+
+  async addQuote($event: Quote) {
+    console.log('Cita para agregar--->', $event);
+
+    const quote: Quote = {
+      quote: $event.quote,
+      author: $event.author,
+    };
+    // Espero que la cita se agregue a la base de datos
+    await this.quoteService.addQuote(quote);
+    // Obtener la lista actualizada de la base de datos
+    this.quotes = await this.quoteService.getQuotes();
+    this.quoteForm.reset();
+    this.updateQuote();
+  }
+
+  deleteQuote(index: number) {
+    // Obtener el ID de la cita a eliminar
+    const quoteId: number = this.quotes[index].id ?? 0;
+    // Eliminar la cita del array local
+    this.quotes.splice(index, 1);
+    // Llamo al servicio para eliminar la cita de la base de datos usando el ID
+    this.quoteService.deleteQuote(quoteId);
+  }
+
   ngOnDestroy() {
     // Utilizo método para desuscribirme y evitar fugas de memoria
     this.allowDeleteSubscription.unsubscribe();
   }
 
-  addQuote() {
-    if (this.quoteForm.valid) {
-      // Si el formulario es válido, obtengo los valores de los campos
-      this.quoteService.addQuote(
-        this.quoteForm.value.quote,
-        this.quoteForm.value.author
-      );
-      this.quoteForm.reset(); // Reseteo el formulario
-      this.quotes = this.quoteService.getQuotes(); // Actualizo lista
-    } else {
-      this.presentAlert();
-    }
-  }
+  // Método para validar formulario en caso de que no se haya ingresado cita o autor muestro un alerta
+  // async presentAlert() {
+  //   const alert = await this.alertController.create({
+  //     header: 'Error',
+  //     message: 'Por favor, ingrese la cita y el autor.',
+  //     buttons: ['OK'],
+  //   });
 
-  deleteQuote(index: number) {
-    // Elimino la cita directamente del array local
-    this.quotes.splice(index, 1);
-    // Aca llamo al servicio para actualizar el array en el servicio
-    this.quoteService.deleteQuote(index);
-  }
-
-  async presentAlert() {
-    const alert = await this.alertController.create({
-      header: 'Error',
-      message: 'Por favor, ingrese la cita y el autor.',
-      buttons: ['OK'],
-    });
-
-    await alert.present();
-  }
+  //   await alert.present();
+  // }
 }

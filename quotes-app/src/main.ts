@@ -3,8 +3,8 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import {
   RouteReuseStrategy,
   provideRouter,
-  withPreloading,
-  PreloadAllModules,
+  // withPreloading,
+  // PreloadAllModules,
 } from '@angular/router';
 import {
   IonicRouteStrategy,
@@ -27,6 +27,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
-    provideRouter(routes, withPreloading(PreloadAllModules)),
+    // provideRouter(routes, withPreloading(PreloadAllModules)),
+    provideRouter(routes),
   ],
 });
